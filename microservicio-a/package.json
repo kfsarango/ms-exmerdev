@@ -1,0 +1,37 @@
+{
+  "name": "ms-a",
+  "version": "1.0.0",
+  "description": "Technical Test about Microservices.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ms-a": "nodemon --watch src src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kfsarango/ms-exmerdev.git"
+  },
+  "keywords": [
+    "node",
+    "microservice",
+    "rabbitmq",
+    "ms"
+  ],
+  "author": "Klever Sarango",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/kfsarango/ms-exmerdev/issues"
+  },
+  "homepage": "https://github.com/kfsarango/ms-exmerdev#readme",
+  "dependencies": {
+    "amqplib": "^0.8.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "request": "^2.88.2",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
