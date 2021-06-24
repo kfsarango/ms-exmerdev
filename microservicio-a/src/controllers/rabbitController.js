@@ -1,7 +1,7 @@
 const amqp = require('amqplib/callback_api');
 
 const rabbitController = {}
-const rabbitUrl = 'amqp://localhost' | process.env.URL_RABBITMQ;
+const rabbitUrl = process.env.URL_RABBITMQ | 'amqp:/s/localhost';
 
 
 let my_channel = null;
