@@ -13,17 +13,25 @@ amqp.connect('amqp://localhost', function (error0, connection) {
         channel.assertQueue(queue, {
             durable: false
         });
+
         channel.prefetch(1);
-        console.log(' [x] Awaiting RPC requests');
+
+        console.log('ms-a: Awaiting RPC requests');
+        
+        // Received message
         channel.consume(queue, function reply(msg) {
-            var name = msg.content.toString();
-
-            console.log("Receive MSG", name);
-            console.log(msg.properties.replyTo);
-            console.log(msg.properties.correlationId);
-
+            // get name
+            const name = msg.content.toString();
+            // building message of response
+            let message = '';
+            if (name === '' ) {
+                message = 'Saludos desde el microservicio B'
+            }else{
+                message = `Hola ${name.toUpperCase()}, un saludo desde el microservicion B`
+            }
+            // set greeting message in queue
             channel.sendToQueue(msg.properties.replyTo,
-                Buffer.from("Response from ms-B"), {
+                Buffer.from(message), {
                     correlationId: msg.properties.correlationId
                 });
             channel.ack(msg);

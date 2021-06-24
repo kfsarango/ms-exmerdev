@@ -1,43 +1,49 @@
-const rabbitController = {}
 const amqp = require('amqplib/callback_api');
+
+const rabbitController = {}
 const rabbitUrl = 'amqp://localhost' | process.env.URL_RABBITMQ;
 
-let ch = null;
+
+let my_channel = null;
+
+// Set connection with RabbitMQ Server
 amqp.connect(rabbitUrl, function (err, conn) {
     conn.createChannel(function (err, channel) {
-        console.log('set channel');
-        ch = channel;
+        // Set channel
+        my_channel = channel;
     });
 });
 
-rabbitController.sendMessage = async (queueName, identifier, data) => {
-    ch.assertQueue('', {
+// Sending message and receive response
+rabbitController.sendMessage = async (queueName, identifier, data, callback) => {
+    my_channel.assertQueue('', {
         exclusive: true
     }, function (error, q) {
         if (error) {
             throw error;
         }
-
-        console.log(' [x] Requesting: ', data);
-
-        ch.consume(q.queue, function (msg) {
+        // Receive message using identifier
+        my_channel.consume(q.queue, function (msg) {
             if (msg.properties.correlationId == identifier) {
-                console.log(' [.] Got %s', msg.content.toString());
+                callback(msg.content.toString());
             }
         }, {
             noAck: true
         });
 
-        ch.sendToQueue(queueName,
+        // Send message to queue
+        my_channel.sendToQueue(queueName,
             Buffer.from(data), {
                 correlationId: identifier,
                 replyTo: q.queue
             });
     });
 }
+
+// Clossing connection RabbitMQ
 process.on('exit', (code) => {
-    ch.close();
+    my_channel.close();
     console.log(`Closing rabbitmq channel`);
 });
 
-module.exports = rabbitController
+module.exports = rabbitController;
